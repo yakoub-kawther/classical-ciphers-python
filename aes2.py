@@ -158,26 +158,48 @@ def decrypt_text(hex_text, key):
     return out[:-pad].decode("utf-8")
 
 
-#---------- Programme principal ----------
-# if __name__ == "__main__":
-#     print("1 : Chiffrer")
-#     print("2 : Dechiffrer")
-#     choice = input("Votre choix (1 ou 2) : ")
+# ---------- Interactive menu ----------
+def ask_key():
+    # same rules as before: keep letters/digits, then pad with x, re-enter or trim to 16
+    key = "".join(ch for ch in input("Enter your key (must be 16 letters / 128 bits): ") if ch.isalnum())
 
-#     if choice not in ("1", "2"):
-#         print("Choix invalide")
-#     else:
-#         key_text = input("Entrez la cle (exactement 16 caracteres) : ")
-#         key = key_text.encode("utf-8")
-#         if len(key) != 16:
-#             print("Erreur : la cle doit faire exactement 16 octets (AES-128)")
-#         else:
-#             try:
-#                 if choice == "1":
-#                     text = input("Entrez le texte : ")
-#                     print("Texte chiffre (hex) :", encrypt_text(text, key))
-#                 else:
-#                     text = input("Entrez le texte chiffre (hex) : ")
-#                     print("Texte dechiffre :", decrypt_text(text.strip(), key))
-#             except Exception as e:
-#                 print("Erreur :", e)
+    while len(key) < 16:
+        c = input(
+            "Key is less than 128 bits.\n"
+            "Enter a new key (1) or fill the rest with x (2): "
+        )
+        if c == "1":
+            key = "".join(ch for ch in input("Enter a new key: ") if ch.isalnum())
+        elif c == "2":
+            key = key + "x" * (16 - len(key))
+        else:
+            print("Invalid choice.")
+
+    if len(key) > 16:
+        print("This key is too long, we gonna ignore the rest")
+        key = key[:16]
+
+    print("key:", key)
+    return key.encode("utf-8")
+
+
+def aes_cypher():
+    choice = input("You wanna encrypt (1) or decrypt (2): ").strip()
+
+    if choice == "1":
+        mssg = input("Enter your message: ")
+        key = ask_key()
+        print("encrypted mssg is :", encrypt_text(mssg, key))
+
+    elif choice == "2":
+        cipher_hex = input("Enter the ciphertext as plain hex text: ").strip().replace(" ", "")
+        key = ask_key()
+        try:
+            print("decrypted mssg is :", decrypt_text(cipher_hex, key))
+        except ValueError as e:
+            print("Error:", e)
+
+    else:
+        print("Invalid choice.")
+
+

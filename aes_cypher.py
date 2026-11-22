@@ -27,29 +27,14 @@ def multiply_hex(a, b):
     return format(result, '02x')
 
 def letter_to_numbers(mssg):
-    letters = []
-    for i in mssg:
-        if 'A' <= i <= 'Z':
-            e = ord(i) - 65
-        elif 'a' <= i <= 'z':
-            e = ord(i) - 97
-        elif '0' <= i <= '9':
-            e = ord(i) - 48 + 26   # digits 0-9 become 26-35, right after the letters
-        else:
-            continue
-        letters.append(e)
-    return letters
+    return [ord(ch) for ch in mssg if ch.isalnum()]
 
 
 def numbers_to_letters(matrix):
     text = ""
     for j in range(4):
         for i in range(4):
-            n = int(matrix[i][j], 16)
-            if n < 26:
-                text += chr(n + 97)
-            else:
-                text += chr(n - 26 + 48)
+            text += chr(int(matrix[i][j], 16))
     return text
 
 
@@ -460,4 +445,3 @@ def aes_cypher():
         print("Invalid choice.")
 
 
-# aes_cypher()

@@ -5,6 +5,7 @@ from exo3 import vigenere_cypher
 from hill_cypher import hill_cypher
 from rsa_scratch import rsa_cipher
 from aes_cypher import aes_cypher
+from aes2 import aes_cypher as aes
 
 
 def ask_choice(prompt, options):
@@ -31,7 +32,7 @@ ACTIONS = {
     "2": affine_cypher,
     "3": vigenere_cypher,
     "4": hill_cypher,
-    "5": aes_cypher,
+    "5": aes,
     "6": rsa_cipher,
 }
 
